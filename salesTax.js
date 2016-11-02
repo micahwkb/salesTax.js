@@ -22,27 +22,30 @@ var companySalesData = [
   }
 ];
 
-console.log(calculateSalesTax())
-
 function calculateSalesTax(salesData, taxRates) {
-  for (var index in companySalesData) {
-    var perCompany = companySalesData[index];
-   // console.log(perCompany);
-   // console.log(perCompany.province)
-    var taxRate = salesTaxRates[perCompany.province];
-    // console.log(taxRate);
-
-  }
-
+  var output = {};
+  salesData.forEach(function(company) {
+    var totalSales = company.sales.reduce(function(prev, curr) {
+      return prev + curr;
+    });
+    var province = company.province;
+    var totalTaxes = totalSales * taxRates[province];
+    // build array key in "output" for this company
+    if (!output.hasOwnProperty(company.name)) {
+      output[company.name] = {
+        totalSales: totalSales,
+        totalTaxes: totalTaxes
+        }
+    } else {
+      output[company.name].totalSales += totalSales;
+      output[company.name].totalTaxes += totalTaxes;
+    }
+  });
+    return output;
 }
 
-//     for (var prov in perCompany) {
-//       if (perCompany.hasOwnProperty('province')) {
-//         console.log(perCompany.province);
-//       } else return "No province provided for " + perCompany;
-//     }
-
-// var results = salesTaxReport(companySalesData, salesTaxRates);
+var results = calculateSalesTax(companySalesData, salesTaxRates);
+console.log(results);
 
 /* Expected Results:
 {
