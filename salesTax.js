@@ -22,26 +22,29 @@ var companySalesData = [
   }
 ];
 
+function calculateSales(co) {
+  return co.sales.reduce(function(prev, curr) {
+      return prev + curr;
+    });
+}
+
 function calculateSalesTax(salesData, taxRates) {
   var output = {};
   salesData.forEach(function(company) {
-    var totalSales = company.sales.reduce(function(prev, curr) {
-      return prev + curr;
-    });
-    var province = company.province;
-    var totalTaxes = totalSales * taxRates[province];
+    var totalSales = calculateSales(company);
+    var totalTaxes = totalSales * taxRates[company.province];
     // build array key in "output" for this company
     if (!output.hasOwnProperty(company.name)) {
       output[company.name] = {
         totalSales: totalSales,
         totalTaxes: totalTaxes
-        }
+      }
     } else {
       output[company.name].totalSales += totalSales;
       output[company.name].totalTaxes += totalTaxes;
     }
   });
-    return output;
+  return output;
 }
 
 var results = calculateSalesTax(companySalesData, salesTaxRates);
