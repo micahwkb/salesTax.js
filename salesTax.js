@@ -22,17 +22,23 @@ var companySalesData = [
   }
 ];
 
+// calculate total sales given a company object with "sales" key
 function calculateSales(co) {
   return co.sales.reduce(function(prev, curr) {
       return prev + curr;
     });
 }
 
+// calculate taxes given total sales and tax rate
+function calculateTaxes(sales, rate) {
+  return sales * rate;
+}
+
 function calculateSalesTax(salesData, taxRates) {
   var output = {};
   salesData.forEach(function(company) {
     var totalSales = calculateSales(company);
-    var totalTaxes = totalSales * taxRates[company.province];
+    var totalTaxes = calculateTaxes(totalSales, taxRates[company.province]);
     // build array key in "output" for this company
     if (!output.hasOwnProperty(company.name)) {
       output[company.name] = {
